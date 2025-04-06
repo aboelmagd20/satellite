@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Monitoring System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sensor-card {
+            margin-bottom: 20px;
+        }
+        .sensor-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .field-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .field-name {
+            font-weight: 500;
+        }
+        .field-value {
+            margin-right: 10px;
+        }
+        .field-time {
+            font-size: 0.8em;
+            color: #666;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Satellite Monitoring System</h1>
+        
+        <div class="row">
+            <!-- Power -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">Power</h5>
+                        <div class="field-row">
+                            <span class="field-name">Battery Level:</span>
+                            <div>
+                                <span class="field-value" id="battery_level"></span>%
+                                <span class="field-time" id="power_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Battery Voltage:</span>
+                            <div>
+                                <span class="field-value" id="battery_voltage"></span>V
+                                <span class="field-time" id="power_timestamp_2"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Telemetry -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">Telemetry</h5>
+                        <div class="field-row">
+                            <span class="field-name">Sensor Telemetry:</span>
+                            <div>
+                                <span class="field-value" id="sensor_telemetry"></span>
+                                <span class="field-time" id="telemetry_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor GPS:</span>
+                            <div>
+                                <span class="field-value" id="sensor_gps"></span>
+                                <span class="field-time" id="telemetry_timestamp_2"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor Communication:</span>
+                            <div>
+                                <span class="field-value" id="sensor_communication"></span>
+                                <span class="field-time" id="telemetry_timestamp_3"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor Thermal:</span>
+                            <div>
+                                <span class="field-value" id="sensor_thermal"></span>
+                                <span class="field-time" id="telemetry_timestamp_4"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor Payload:</span>
+                            <div>
+                                <span class="field-value" id="sensor_payload"></span>
+                                <span class="field-time" id="telemetry_timestamp_5"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor Control:</span>
+                            <div>
+                                <span class="field-value" id="sensor_control"></span>
+                                <span class="field-time" id="telemetry_timestamp_6"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor OBC:</span>
+                            <div>
+                                <span class="field-value" id="sensor_obc"></span>
+                                <span class="field-time" id="telemetry_timestamp_7"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Sensor Power:</span>
+                            <div>
+                                <span class="field-value" id="sensor_power"></span>
+                                <span class="field-time" id="telemetry_timestamp_8"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Communication -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">Communication</h5>
+                        <div class="field-row">
+                            <span class="field-name">Data Rate:</span>
+                            <div>
+                                <span class="field-value" id="data_rate"></span> Mbps
+                                <span class="field-time" id="communication_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Latency:</span>
+                            <div>
+                                <span class="field-value" id="latency"></span> ms
+                                <span class="field-time" id="communication_timestamp_2"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Status:</span>
+                            <div>
+                                <span class="field-value" id="status"></span>
+                                <span class="field-time" id="communication_timestamp_3"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OBC -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">OBC</h5>
+                        <div class="field-row">
+                            <span class="field-name">CPU Usage:</span>
+                            <div>
+                                <span class="field-value" id="cpu_usage"></span>%
+                                <span class="field-time" id="obc_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Memory Usage:</span>
+                            <div>
+                                <span class="field-value" id="memory_usage"></span>%
+                                <span class="field-time" id="obc_timestamp_2"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">CPU Temperature:</span>
+                            <div>
+                                <span class="field-value" id="cpu_temperature"></span>°C
+                                <span class="field-time" id="obc_timestamp_3"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Memory Temperature:</span>
+                            <div>
+                                <span class="field-value" id="memory_temperature"></span>°C
+                                <span class="field-time" id="obc_timestamp_4"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Uptime:</span>
+                            <div>
+                                <span class="field-value" id="uptime"></span> seconds
+                                <span class="field-time" id="obc_timestamp_5"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payload -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">Payload</h5>
+                        <div class="field-row">
+                            <span class="field-name">Type:</span>
+                            <div>
+                                <span class="field-value" id="payload_type"></span>
+                                <span class="field-time" id="payload_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Compression Rate:</span>
+                            <div>
+                                <span class="field-value" id="compression_rate"></span>x
+                                <span class="field-time" id="payload_timestamp_2"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Value:</span>
+                            <div>
+                                <span class="field-value" id="value"></span>
+                                <span class="field-time" id="payload_timestamp_3"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Memory Size:</span>
+                            <div>
+                                <span class="field-value" id="memory_size"></span> MB
+                                <span class="field-time" id="payload_timestamp_4"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Thermal -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">Thermal</h5>
+                        <div class="field-row">
+                            <span class="field-name">Internal Temperature:</span>
+                            <div>
+                                <span class="field-value" id="internal_temperature"></span>°C
+                                <span class="field-time" id="thermal_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">External Temperature:</span>
+                            <div>
+                                <span class="field-value" id="external_temperature"></span>°C
+                                <span class="field-time" id="thermal_timestamp_2"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Battery Temperature:</span>
+                            <div>
+                                <span class="field-value" id="battery_temperature"></span>°C
+                                <span class="field-time" id="thermal_timestamp_3"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Cooling Status:</span>
+                            <div>
+                                <span class="field-value" id="cooling_status"></span>
+                                <span class="field-time" id="thermal_timestamp_4"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPS -->
+            <div class="col-md-4">
+                <div class="card sensor-card">
+                    <div class="card-body">
+                        <h5 class="card-title sensor-title">GPS</h5>
+                        <div class="field-row">
+                            <span class="field-name">Latitude:</span>
+                            <div>
+                                <span class="field-value" id="latitude"></span>°
+                                <span class="field-time" id="gps_timestamp"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Longitude:</span>
+                            <div>
+                                <span class="field-value" id="longitude"></span>°
+                                <span class="field-time" id="gps_timestamp_2"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Altitude:</span>
+                            <div>
+                                <span class="field-value" id="altitude"></span> km
+                                <span class="field-time" id="gps_timestamp_3"></span>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-name">Velocity:</span>
+                            <div>
+                                <span class="field-value" id="velocity"></span> km/s
+                                <span class="field-time" id="gps_timestamp_4"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to extract just the time part from a timestamp
+        function extractTime(timestamp) {
+            // If timestamp contains both date and time, extract just the time
+            if (timestamp.includes(' ')) {
+                return timestamp.split(' ')[1];
+            }
+            return timestamp;
+        }
+        
+        // Function to fetch and update data
+        function updateData() {
+            fetch('/api/all/')
+                .then(response => response.json())
+                .then(data => {
+                    // Update Power
+                    document.getElementById('battery_level').textContent = data.power.battery_level;
+                    document.getElementById('battery_voltage').textContent = data.power.battery_voltage;
+                    document.getElementById('power_timestamp').textContent = extractTime(data.power.timestamp);
+                    document.getElementById('power_timestamp_2').textContent = extractTime(data.power.timestamp);
+                    
+                    // Update Telemetry
+                    document.getElementById('sensor_telemetry').textContent = data.telemetry.sensor_telemetry;
+                    document.getElementById('sensor_gps').textContent = data.telemetry.sensor_gps;
+                    document.getElementById('sensor_communication').textContent = data.telemetry.sensor_communication;
+                    document.getElementById('sensor_thermal').textContent = data.telemetry.sensor_thermal;
+                    document.getElementById('sensor_payload').textContent = data.telemetry.sensor_payload;
+                    document.getElementById('sensor_control').textContent = data.telemetry.sensor_control;
+                    document.getElementById('sensor_obc').textContent = data.telemetry.sensor_obc;
+                    document.getElementById('sensor_power').textContent = data.telemetry.sensor_power;
+                    
+                    // Update telemetry timestamps for each field
+                    const telemetryTime = extractTime(data.telemetry.timestamp);
+                    document.getElementById('telemetry_timestamp').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_2').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_3').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_4').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_5').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_6').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_7').textContent = telemetryTime;
+                    document.getElementById('telemetry_timestamp_8').textContent = telemetryTime;
+                    
+                    // Update Communication
+                    document.getElementById('data_rate').textContent = data.communication.data_rate;
+                    document.getElementById('latency').textContent = data.communication.latency;
+                    document.getElementById('status').textContent = data.communication.status;
+                    
+                    // Update communication timestamps
+                    const commTime = extractTime(data.communication.timestamp);
+                    document.getElementById('communication_timestamp').textContent = commTime;
+                    document.getElementById('communication_timestamp_2').textContent = commTime;
+                    document.getElementById('communication_timestamp_3').textContent = commTime;
+                    
+                    // Update OBC
+                    document.getElementById('cpu_usage').textContent = data.obc.cpu_usage;
+                    document.getElementById('memory_usage').textContent = data.obc.memory_usage;
+                    document.getElementById('cpu_temperature').textContent = data.obc.cpu_temperature;
+                    document.getElementById('memory_temperature').textContent = data.obc.memory_temperature;
+                    document.getElementById('uptime').textContent = data.obc.uptime;
+                    
+                    // Update OBC timestamps
+                    const obcTime = extractTime(data.obc.timestamp);
+                    document.getElementById('obc_timestamp').textContent = obcTime;
+                    document.getElementById('obc_timestamp_2').textContent = obcTime;
+                    document.getElementById('obc_timestamp_3').textContent = obcTime;
+                    document.getElementById('obc_timestamp_4').textContent = obcTime;
+                    document.getElementById('obc_timestamp_5').textContent = obcTime;
+                    
+                    // Update Payload
+                    document.getElementById('payload_type').textContent = data.payload.payload_type;
+                    document.getElementById('compression_rate').textContent = data.payload.compression_rate;
+                    document.getElementById('value').textContent = data.payload.value;
+                    document.getElementById('memory_size').textContent = data.payload.memory_size;
+                    
+                    // Update Payload timestamps
+                    const payloadTime = extractTime(data.payload.timestamp);
+                    document.getElementById('payload_timestamp').textContent = payloadTime;
+                    document.getElementById('payload_timestamp_2').textContent = payloadTime;
+                    document.getElementById('payload_timestamp_3').textContent = payloadTime;
+                    document.getElementById('payload_timestamp_4').textContent = payloadTime;
+                    
+                    // Update Thermal
+                    document.getElementById('internal_temperature').textContent = data.thermal.internal_temperature;
+                    document.getElementById('external_temperature').textContent = data.thermal.external_temperature;
+                    document.getElementById('battery_temperature').textContent = data.thermal.battery_temperature;
+                    document.getElementById('cooling_status').textContent = data.thermal.cooling_status;
+                    
+                    // Update Thermal timestamps
+                    const thermalTime = extractTime(data.thermal.timestamp);
+                    document.getElementById('thermal_timestamp').textContent = thermalTime;
+                    document.getElementById('thermal_timestamp_2').textContent = thermalTime;
+                    document.getElementById('thermal_timestamp_3').textContent = thermalTime;
+                    document.getElementById('thermal_timestamp_4').textContent = thermalTime;
+                    
+                    // Update GPS
+                    document.getElementById('latitude').textContent = data.gps.latitude;
+                    document.getElementById('longitude').textContent = data.gps.longitude;
+                    document.getElementById('altitude').textContent = data.gps.altitude;
+                    document.getElementById('velocity').textContent = data.gps.velocity;
+                    
+                    // Update GPS timestamps
+                    const gpsTime = extractTime(data.gps.timestamp);
+                    document.getElementById('gps_timestamp').textContent = gpsTime;
+                    document.getElementById('gps_timestamp_2').textContent = gpsTime;
+                    document.getElementById('gps_timestamp_3').textContent = gpsTime;
+                    document.getElementById('gps_timestamp_4').textContent = gpsTime;
+                });
+        }
+        
+        // Update data initially
+        updateData();
+        
+        // Update data every 5 seconds
+        setInterval(updateData, 5000);
+    </script>
+</body>
+</html>
