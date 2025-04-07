@@ -1,14 +1,14 @@
 from django.contrib import admin
-from .models import Power, Telemetry, Communication, OBC, Payload, Thermal, GPS
+from .models import PowerHistory, TelemetryHistory, CommunicationHistory, OBCHistory, PayloadHistory, ThermalHistory, GPSHistory
 
 # Basic admin registration
-admin.site.register(Power)
-admin.site.register(Telemetry)
-admin.site.register(Communication)
-admin.site.register(OBC)
-admin.site.register(Payload)
-admin.site.register(Thermal)
-admin.site.register(GPS)
+admin.site.register(PowerHistory)
+admin.site.register(TelemetryHistory)
+admin.site.register(CommunicationHistory)
+admin.site.register(OBCHistory)
+admin.site.register(PayloadHistory)
+admin.site.register(ThermalHistory)
+admin.site.register(GPSHistory)
 
 # Alternative: Custom admin classes for more control
 

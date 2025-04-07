@@ -12,6 +12,78 @@ class BaseModel(models.Model):
     def get_timestamp(self):
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+class PowerHistory(models.Model):
+    battery_level = models.FloatField()
+    battery_voltage = models.FloatField()
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"PowerHistory: {self.battery_level}V at {self.timestamp}"
+
+class TelemetryHistory(models.Model):
+    sensor_telemetry = models.BooleanField()
+    sensor_gps = models.BooleanField()
+    sensor_communication = models.BooleanField()
+    sensor_thermal = models.BooleanField()
+    sensor_payload = models.BooleanField()
+    sensor_control = models.BooleanField()
+    sensor_obc = models.BooleanField()
+    sensor_power = models.BooleanField()
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"TelemetryHistory at {self.timestamp}"
+
+class CommunicationHistory(models.Model):
+    data_rate = models.FloatField()
+    latency = models.IntegerField()
+    status = models.CharField(max_length=50)
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"CommunicationHistory: {self.status} at {self.timestamp}"
+
+class OBCHistory(models.Model):
+    cpu_usage = models.FloatField()
+    memory_usage = models.FloatField()
+    cpu_temperature = models.FloatField()
+    memory_temperature = models.FloatField()
+    uptime = models.IntegerField()
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"OBCHistory: CPU {self.cpu_usage}% at {self.timestamp}"
+
+class PayloadHistory(models.Model):
+    payload_type = models.CharField(max_length=50)
+    compression_rate = models.FloatField()
+    value = models.FloatField()
+    memory_size = models.FloatField()
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"PayloadHistory: {self.payload_type} at {self.timestamp}"
+
+class ThermalHistory(models.Model):
+    internal_temperature = models.FloatField()
+    external_temperature = models.FloatField()
+    battery_temperature = models.FloatField()
+    cooling_status = models.CharField(max_length=50)
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"ThermalHistory: {self.cooling_status} at {self.timestamp}"
+
+class GPSHistory(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    altitude = models.FloatField()
+    velocity = models.FloatField()
+    timestamp = models.DateTimeField()
+    
+    def __str__(self):
+        return f"GPSHistory: {self.latitude}, {self.longitude} at {self.timestamp}"
+
 class Power(BaseModel):
     battery_level = models.FloatField(default=0)
     battery_voltage = models.FloatField(default=0)
@@ -27,6 +99,18 @@ class Power(BaseModel):
             'battery_voltage': self.battery_voltage,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:  # Check if the object already exists
+            PowerHistory.objects.create(
+                battery_level=self.battery_level,
+                battery_voltage=self.battery_voltage,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"Power: {self.battery_level}%"
 
 class Telemetry(BaseModel):
     sensor_telemetry = models.BooleanField(default=True)
@@ -61,6 +145,24 @@ class Telemetry(BaseModel):
             'sensor_power': self.sensor_power,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            TelemetryHistory.objects.create(
+                sensor_telemetry=self.sensor_telemetry,
+                sensor_gps=self.sensor_gps,
+                sensor_communication=self.sensor_communication,
+                sensor_thermal=self.sensor_thermal,
+                sensor_payload=self.sensor_payload,
+                sensor_control=self.sensor_control,
+                sensor_obc=self.sensor_obc,
+                sensor_power=self.sensor_power,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return "Telemetry"
 
 class Communication(BaseModel):
     data_rate = models.FloatField(default=0)
@@ -80,6 +182,19 @@ class Communication(BaseModel):
             'status': self.status,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            CommunicationHistory.objects.create(
+                data_rate=self.data_rate,
+                latency=self.latency,
+                status=self.status,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"Communication: {self.status}"
 
 class OBC(BaseModel):
     cpu_usage = models.FloatField(default=0)
@@ -105,6 +220,21 @@ class OBC(BaseModel):
             'uptime': self.uptime,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            OBCHistory.objects.create(
+                cpu_usage=self.cpu_usage,
+                memory_usage=self.memory_usage,
+                cpu_temperature=self.cpu_temperature,
+                memory_temperature=self.memory_temperature,
+                uptime=self.uptime,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"OBC: CPU {self.cpu_usage}%"
 
 class Payload(BaseModel):
     payload_type = models.CharField(max_length=50, default='Camera')
@@ -127,6 +257,20 @@ class Payload(BaseModel):
             'memory_size': self.memory_size,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            PayloadHistory.objects.create(
+                payload_type=self.payload_type,
+                compression_rate=self.compression_rate,
+                value=self.value,
+                memory_size=self.memory_size,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"Payload: {self.payload_type}"
 
 class Thermal(BaseModel):
     internal_temperature = models.FloatField(default=0)
@@ -149,6 +293,20 @@ class Thermal(BaseModel):
             'cooling_status': self.cooling_status,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            ThermalHistory.objects.create(
+                internal_temperature=self.internal_temperature,
+                external_temperature=self.external_temperature,
+                battery_temperature=self.battery_temperature,
+                cooling_status=self.cooling_status,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"Thermal: {self.cooling_status}"
 
 class GPS(BaseModel):
     latitude = models.FloatField(default=0)
@@ -171,3 +329,17 @@ class GPS(BaseModel):
             'velocity': self.velocity,
             'timestamp': self.get_timestamp()
         }
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            GPSHistory.objects.create(
+                latitude=self.latitude,
+                longitude=self.longitude,
+                altitude=self.altitude,
+                velocity=self.velocity,
+                timestamp=self.timestamp
+            )
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"GPS: {self.latitude}, {self.longitude}"
